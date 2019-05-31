@@ -41,17 +41,4 @@ public class AuthController {
     ResponseEntity<AuthDto> authenitcate(@RequestParam(value = "authToken") String authToken) {
         return new ResponseEntity<>(userService.authenticateUser(authToken), HttpStatus.OK);
     }
-
-    @GetMapping("/all")
-    List<User> getAll() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(user));
-        return users;
-    }
-
-    @DeleteMapping("/del")
-    void delete() {
-        List<User> users = new ArrayList<>();
-        userRepository.deleteAll();
-    }
 }
