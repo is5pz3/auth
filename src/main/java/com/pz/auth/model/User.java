@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Data
 @Getter
 @Setter
-@Entity(name = "USER6")
+@Entity(name = "USER1")
 @NoArgsConstructor
 public class User {
     @Id @GeneratedValue
