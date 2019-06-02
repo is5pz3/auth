@@ -1,9 +1,7 @@
 package com.pz.auth.service;
 
-import com.pz.auth.AuthApplication;
 import com.pz.auth.dto.AuthDto;
 import com.pz.auth.dto.UserDto;
-import com.pz.auth.exception.AuthApplicationException;
 import com.pz.auth.exception.FailedAuthenticationAttempt;
 import com.pz.auth.exception.FailedLoginAttempt;
 import com.pz.auth.jwt.Jwt;
@@ -29,16 +27,19 @@ public class UserService {
     @Autowired
     private Jwt jwt;
 
+    public UserService(UserRepository userRepository, UserDataValidator userDataValidator,
+                       PasswordEncoder passwordEncoder, Jwt jwt) {
+        this.userRepository = userRepository;
+        this.userDataValidator =userDataValidator;
+        this.passwordEncoder = passwordEncoder;
+        this.jwt = jwt;
+    }
+
     public AuthDto registerNewUserAccount(UserDto userDto) {
         userDataValidator.validate(userDto);
-
-        User user = new User();
         String login = userDto.getLogin();
-        user.setLogin(login);
 
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        userRepository.save(user);
+        userRepository.save(new User(login, passwordEncoder.encode(userDto.getPassword())));
         String authToken = jwt.createJWT(login);
         return new AuthDto(login, authToken, jwt.getJWTExpireDate(authToken));
     }

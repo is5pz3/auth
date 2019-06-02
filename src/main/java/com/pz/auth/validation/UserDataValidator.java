@@ -6,13 +6,15 @@ import com.pz.auth.exception.InvalidCredentialsException;
 import com.pz.auth.exception.WeakPasswordException;
 import com.pz.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-@Service
+@Component
 public class UserDataValidator implements IUserDataValidator {
 
     private static final String AT_LEAST_ONE_ALPHA = ".*[a-zA-Z]+.*";
     private static final String AT_LEAST_ONE_NUMERIC = ".*[0-9]+.*";
+    private static final int MIN_PASSWORD_LENGTH = 5;
 
     @Autowired
     private UserRepository userRepository;
@@ -23,7 +25,7 @@ public class UserDataValidator implements IUserDataValidator {
 
     @Override
     public void validate(UserDto user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
+        if (StringUtils.isEmpty(user.getLogin()) || StringUtils.isEmpty(user.getPassword())) {
             throw new InvalidCredentialsException();
         }
 
@@ -34,7 +36,7 @@ public class UserDataValidator implements IUserDataValidator {
         String password = user.getPassword();
         boolean atLeastOneAlpha = password.matches(AT_LEAST_ONE_ALPHA);
         boolean atLeastOneNumeric = password.matches(AT_LEAST_ONE_NUMERIC);
-        if (user.getPassword().length() < 5 || !atLeastOneAlpha || !atLeastOneNumeric) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH || !atLeastOneAlpha || !atLeastOneNumeric) {
             throw new WeakPasswordException();
         }
     }
