@@ -15,4 +15,4 @@ WORKDIR /root/
 COPY --from=builder /usr/src/myapp/target/auth-0.0.1-SNAPSHOT.jar .
 
 EXPOSE 8080
-CMD java -jar ./auth-0.0.1-SNAPSHOT.jar --server.port=$PORT
+CMD java -Xmx256m -jar ./auth-0.0.1-SNAPSHOT.jar --server.port=$PORT
